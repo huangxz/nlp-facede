@@ -1,0 +1,13 @@
+server:
+  port: 9090
+
+app:
+  nlp:
+    corpus:
+      v1: ${NLP_CORPUS_V1:/opt/nlp_data/corpus/v1}
+      v2: ${NLP_CORPUS_V2:/opt/nlp_data/corpus/v2.txt}
+    model:
+      cws: ${NLP_MODEL_CWS:/opt/nlp_data/hanlp/data/model/perceptron/pku2681/cws.bin}
+      pos: ${NLP_MODEL_POS:/opt/nlp_data/hanlp/data/model/perceptron/pku2681/pos.bin}
+      ner: ${NLP_MODEL_NER:/opt/nlp_data/hanlp/data/model/perceptron/pku2681/ner.bin}
+      vec: ${NLP_MODEL_VEC:/opt/nlp_data/hanlp/data/model/word2vec/msr.txt}
