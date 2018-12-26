@@ -28,12 +28,12 @@ java -jar nlp-facede-0.0.1-SNAPSHOT.jar \
 
 基于感知机制作人民日报2014语料格式语料库
 ```
-curl -X POST http://localhost:8888/corpus/perceptron?path=/opt/nlp_data/text
+curl -X POST http://localhost:9090/corpus/perceptron?path=/opt/nlp_data/text
 ``` 
 
 基于感知机制作 word2vec 语料库
 ```
-curl -X POST http://localhost:8888/corpus/word2vec?path=/opt/nlp_data/text
+curl -X POST http://localhost:9090/corpus/word2vec?path=/opt/nlp_data/text
 ```
 
 ## 根据自己的语料库训练行业模型
