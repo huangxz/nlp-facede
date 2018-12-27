@@ -1,40 +1,21 @@
 package io.batizhao.nlp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.collection.AhoCorasick.AhoCorasickDoubleArrayTrie;
-import com.hankcs.hanlp.corpus.document.sentence.word.IWord;
-import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.BaseSearcher;
-import com.hankcs.hanlp.dictionary.CoreDictionary;
-import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
 import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
-import com.hankcs.hanlp.model.crf.CRFSegmenter;
-import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.model.perceptron.PerceptronSegmenter;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.tokenizer.NLPTokenizer;
-import com.hankcs.hanlp.tokenizer.StandardTokenizer;
-import com.hankcs.hanlp.tokenizer.pipe.LexicalAnalyzerPipeline;
-import com.hankcs.hanlp.tokenizer.pipe.Pipe;
-import com.hankcs.hanlp.tokenizer.pipe.RegexRecognizePipe;
+import io.batizhao.nlp.api.ApiController;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.EmptyFileFilter;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -46,6 +27,9 @@ public class DemoTest extends NlpApplicationTests {
 
     @Value("${app.nlp.model.vec}")
     public String vec;
+
+    @Autowired
+    private ApiController apiController;
 
     @Test
     public void testSeg() throws IOException {
@@ -114,42 +98,9 @@ public class DemoTest extends NlpApplicationTests {
 
     @Test
     public void testCustomDictionary() throws IOException {
-
 //        HanLP.Config.enableDebug();
-        CustomDictionary.reload();
-
-        File file = new File("/opt/nlp_data/text/会议通知〔2011〕305号.txt");
-        String text = FileUtils.readFileToString(file, UTF_8);
-
-        List<Term> terms = HanLP.newSegment().enableCustomDictionaryForcing(true).seg(text);
-
-        //在词前增加分隔符用来 split
-        Nature pcNature = Nature.fromString("HYTZ");
-        for (Term term : terms) {
-            if (term.nature == pcNature) term.word = "|" + term.word;
-        }
-
-        //去除首尾中括号
-        String data = terms.toString().replaceAll("[\\[\\]]", "");
-        System.out.println("s1" + data);
-
-        //必须用 StringUtils 才能过滤开头的空格
-        String[] strs = StringUtils.split(data, "|");
-        System.out.println("s2" + Arrays.toString(strs));
-
-        Map<String, String> m = new HashMap<>();
-        String ms0, ms1;
-        for (String s : strs) {
-            String[] ms = StringUtils.splitByWholeSeparator(s,"/HYTZ, ");
-            System.out.println("s3" + Arrays.toString(ms));
-
-            ms0 = ms[0];
-            ms1 = ms[1];
-            ms1 = ms1.replaceAll("/\\w+,*\\s*", "");
-
-            m.put(ms0, ms1);
-        }
-
+//        CustomDictionary.reload();
+        Map m = apiController.extractMeetingNotice("/opt/nlp_data/text/会议通知〔2011〕305号.txt");
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(m));
     }
