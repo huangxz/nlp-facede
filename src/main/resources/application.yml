@@ -10,4 +10,4 @@ app:
       cws: ${NLP_MODEL_CWS:/opt/nlp_data/hanlp/data/model/perceptron/pku2681/cws.bin}
       pos: ${NLP_MODEL_POS:/opt/nlp_data/hanlp/data/model/perceptron/pku2681/pos.bin}
       ner: ${NLP_MODEL_NER:/opt/nlp_data/hanlp/data/model/perceptron/pku2681/ner.bin}
-      vec: ${NLP_MODEL_VEC:/opt/nlp_data/hanlp/data/model/word2vec/msr.txt}
+      vec: ${NLP_MODEL_VEC:/opt/nlp_data/hanlp/data/model/word2vec/sgns.baidubaike.bigram-char}

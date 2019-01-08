@@ -74,30 +74,16 @@ public class DemoTest extends NlpApplicationTests {
 
     @Test
     public void testKeyword() throws IOException {
-        WordVectorModel wordVectorModel = new WordVectorModel(vec);
-        DocVectorModel docVectorModel = new DocVectorModel(wordVectorModel);
+        String documents = "[ { \"id\": 1,\"title\": \"上海研究院MSS支撑中心领导参会\"},{\"id\": 2,\"title\": \"奥运会中国女排夺冠\"},{\"id\": 3,\"title\": \"博格巴让曼联更强大 但他确实不尊重穆帅\"},{\"id\": 4,\"title\": \"希腊政府外交与国防委员会去年12月中旬批准从美国购买30架F-16战机的计划\"},{\"id\": 5,\"title\": \"全新宝马4系内饰首曝\"}]";
 
-        File file_ = new File("/opt/nlp_data/text/资产管理专项工作组会议通知（201009）.txt");
-//        List<File> files = (List<File>) FileUtils.listFiles(file_, EmptyFileFilter.NOT_EMPTY, DirectoryFileFilter.INSTANCE);
-
-        String filePath;
-        List<String> data = FileUtils.readLines(file_, UTF_8);
-        int i = 0;
-        for (String s : data) {
-            i++;
-            docVectorModel.addDocument(i, s);
-        }
-
-        System.out.println("============会议时间=============");
-        List<Map.Entry<Integer, Float>> entryList = docVectorModel.nearest("会议时间");
-        for (Map.Entry<Integer, Float> entry : entryList) {
-            System.out.printf("%d %.2f\n", entry.getKey(), entry.getValue());
-        }
+        List<Document> list = apiController.lookupSimilarDocuments("福特", documents);
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list));
     }
 
 
     @Test
-    public void testCustomDictionary() throws IOException {
+    public void testExtractMeetingNotice() throws IOException {
 //        HanLP.Config.enableDebug();
 //        CustomDictionary.reload();
         Map m = apiController.extractMeetingNotice("/opt/nlp_data/text/会议通知〔2011〕305号.txt");

@@ -1,28 +1,25 @@
 package io.batizhao.nlp.api;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
 import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
 import com.hankcs.hanlp.seg.common.Term;
+import io.batizhao.nlp.Document;
+import io.batizhao.nlp.WordVectorModelInitiator;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.EmptyFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -36,25 +33,36 @@ public class ApiController {
 
     private static Logger LOG = LoggerFactory.getLogger(ApiController.class);
 
-    @Value("${app.nlp.model.vec}")
-    public String vec;
+    @Autowired
+    WordVectorModelInitiator initiator;
 
+    /**
+     * 根据 q，查 documents 中的相关度，从高到低排序
+     * @param q 查询的串
+     * @param documents 被查询的 JSON
+     * @throws IOException
+     */
     @PostMapping("similar")
-    public void lookupSimilarDocuments() throws IOException {
-        WordVectorModel wordVectorModel = new WordVectorModel(vec);
-        DocVectorModel docVectorModel = new DocVectorModel(wordVectorModel);
+    public List<Document> lookupSimilarDocuments(@RequestParam String q, @RequestBody String documents) throws IOException {
+        DocVectorModel docVectorModel = new DocVectorModel(initiator.getWordVectorModel());
 
-        File file_ = new File("/opt/nlp_data/text");
-        List<File> files = (List<File>) FileUtils.listFiles(file_, EmptyFileFilter.NOT_EMPTY, DirectoryFileFilter.INSTANCE);
+        Document[] docs = new ObjectMapper().readValue(documents, Document[].class);
+        LOG.info("docs : {}", docs);
 
-        String filePath, data;
-        int i = 0;
-        for (File f : files) {
-            i++;
-            filePath = f.getPath();
-            data = FileUtils.readFileToString(f, UTF_8);
-            docVectorModel.addDocument(i, data);
+        for (int i = 0; i < docs.length; i++)
+        {
+            docVectorModel.addDocument(i, docs[i].getTitle());
         }
+
+        List<Map.Entry<Integer, Float>> entryList = docVectorModel.nearest(q);
+        List<Document> list = new ArrayList<>();
+
+        for (Map.Entry<Integer, Float> entry : entryList) {
+            list.add(docs[entry.getKey()]);
+            LOG.info("Title : {}, Similar : {}", docs[entry.getKey()].getTitle(), entry.getValue());
+        }
+
+        return list;
 
     }
 
