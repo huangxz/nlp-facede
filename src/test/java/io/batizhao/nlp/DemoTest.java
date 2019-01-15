@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,9 +75,14 @@ public class DemoTest extends NlpApplicationTests {
 
     @Test
     public void testKeyword() throws IOException {
-        String documents = "[ { \"id\": 1,\"title\": \"上海研究院MSS支撑中心领导参会\"},{\"id\": 2,\"title\": \"奥运会中国女排夺冠\"},{\"id\": 3,\"title\": \"博格巴让曼联更强大 但他确实不尊重穆帅\"},{\"id\": 4,\"title\": \"希腊政府外交与国防委员会去年12月中旬批准从美国购买30架F-16战机的计划\"},{\"id\": 5,\"title\": \"全新宝马4系内饰首曝\"}]";
+        List<Document> documents1 = new ArrayList<>();
+        documents1.add(new Document(1, "上海研究院MSS支撑中心领导参会"));
+        documents1.add(new Document(2, "奥运会中国女排夺冠"));
+        documents1.add(new Document(3, "博格巴让曼联更强大 但他确实不尊重穆帅"));
+        documents1.add(new Document(4, "希腊政府外交与国防委员会去年12月中旬批准从美国购买30架F-16战机的计划"));
+        documents1.add(new Document(5, "全新宝马4系内饰首曝"));
 
-        List<Document> list = apiController.lookupSimilarDocuments("福特", documents);
+        List<Document> list = apiController.lookupSimilarDocuments("中国电信培训〔2013〕20号通知", documents1);
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list));
     }

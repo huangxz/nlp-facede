@@ -1,11 +1,9 @@
 package io.batizhao.nlp.api;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
-import com.hankcs.hanlp.mining.word2vec.WordVectorModel;
 import com.hankcs.hanlp.seg.common.Term;
 import io.batizhao.nlp.Document;
 import io.batizhao.nlp.WordVectorModelInitiator;
@@ -14,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -43,23 +40,22 @@ public class ApiController {
      * @throws IOException
      */
     @PostMapping("similar")
-    public List<Document> lookupSimilarDocuments(@RequestParam String q, @RequestBody String documents) throws IOException {
+    public List<Document> lookupSimilarDocuments(@RequestParam String q, @RequestBody List<Document> documents) {
         DocVectorModel docVectorModel = new DocVectorModel(initiator.getWordVectorModel());
 
-        Document[] docs = new ObjectMapper().readValue(documents, Document[].class);
-        LOG.info("docs : {}", docs);
+        LOG.info("docs : {}", documents);
 
-        for (int i = 0; i < docs.length; i++)
+        for (int i = 0; i < documents.size(); i++)
         {
-            docVectorModel.addDocument(i, docs[i].getTitle());
+            docVectorModel.addDocument(i, documents.get(i).getTitle());
         }
 
         List<Map.Entry<Integer, Float>> entryList = docVectorModel.nearest(q);
         List<Document> list = new ArrayList<>();
 
         for (Map.Entry<Integer, Float> entry : entryList) {
-            list.add(docs[entry.getKey()]);
-            LOG.info("Title : {}, Similar : {}", docs[entry.getKey()].getTitle(), entry.getValue());
+            list.add(documents.get(entry.getKey()));
+            LOG.info("Title : {}, Similar : {}", documents.get(entry.getKey()).getTitle(), entry.getValue());
         }
 
         return list;
