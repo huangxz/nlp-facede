@@ -112,14 +112,14 @@ public class ApiController {
 
     /**
      * 关键词提取
-     * @param document 被提取的内容
+     * @param title 被提取的内容
      * @param size 返回关键字的数量
      * @return
      */
     @PostMapping("keyword")
-    public List<String> extractKeyword(@RequestBody String document, @RequestBody int size) throws IOException {
+    public List<String> extractKeyword(@RequestParam String title, @RequestParam int size) throws IOException {
         PerceptronLexicalAnalyzer analyzer = new PerceptronLexicalAnalyzer();
-        List<Term> terms = analyzer.seg(document);
+        List<Term> terms = analyzer.seg(title);
 
         TextRankKeyword textRankKeyword = new TextRankKeyword();
         List<String> sentenceList = textRankKeyword.getKeywords(terms, size);
