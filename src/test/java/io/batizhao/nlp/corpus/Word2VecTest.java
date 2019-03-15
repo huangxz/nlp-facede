@@ -17,7 +17,12 @@ public class Word2VecTest extends NlpApplicationTests {
     Word2VecController word2VecController;
 
     @Test
-    public void testParse() throws IOException {
-        Assert.assertTrue(word2VecController.parse("/opt/nlp_data/text"));
+    public void testParseDir() throws IOException {
+        Assert.assertTrue(word2VecController.parseDir("/opt/nlp_data/text/jituangongsifawen"));
+    }
+
+    @Test
+    public void testParse() {
+        Assert.assertTrue(word2VecController.parseSingleFile("/opt/nlp_data/text/发文.txt"));
     }
 }

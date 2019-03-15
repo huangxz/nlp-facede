@@ -16,7 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -76,7 +80,25 @@ public class PerceptronController {
                 analyze(analyzer, filePath, f);
             }
         } else {
-            analyze(analyzer, path, file_);
+//            analyze(analyzer, path, file_);
+
+            try(Stream<String> lines = Files.lines(Paths.get(path), UTF_8)) {
+                String name = FilenameUtils.getBaseName(path);
+                File file = new File(corpus, name.concat(TARGET_SUFFIX));
+                lines.forEachOrdered(new Consumer<String>() {
+                    @Override
+                    public void accept(String line) {
+                        try {
+                            Sentence sentence = analyzer.analyze(line);
+                            FileUtils.writeStringToFile(file, sentence.toString().concat(System.getProperty("line.separator")), UTF_8, true);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         LOG.info("Parse completed , please see to path {}.", corpus);

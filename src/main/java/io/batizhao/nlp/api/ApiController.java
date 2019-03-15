@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.mining.word2vec.DocVectorModel;
+import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.summary.TextRankKeyword;
 import io.batizhao.nlp.Document;
 import io.batizhao.nlp.WordVectorModelInitiator;
 import org.apache.commons.io.FileUtils;
@@ -106,5 +108,21 @@ public class ApiController {
         }
 
         return m;
+    }
+
+    /**
+     * 关键词提取
+     * @param document 被提取的内容
+     * @param size 返回关键字的数量
+     * @return
+     */
+    @PostMapping("keyword")
+    public List<String> extractKeyword(@RequestBody String document, @RequestBody int size) throws IOException {
+        PerceptronLexicalAnalyzer analyzer = new PerceptronLexicalAnalyzer();
+        List<Term> terms = analyzer.seg(document);
+
+        TextRankKeyword textRankKeyword = new TextRankKeyword();
+        List<String> sentenceList = textRankKeyword.getKeywords(terms, size);
+        return sentenceList;
     }
 }

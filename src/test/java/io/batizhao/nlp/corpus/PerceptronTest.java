@@ -18,6 +18,7 @@ public class PerceptronTest extends NlpApplicationTests {
 
     @Test
     public void testParse() throws IOException {
-        Assert.assertTrue(perceptronController.parse("/opt/nlp_data/text"));
+//        Assert.assertTrue(perceptronController.parse("/opt/nlp_data/text"));
+        Assert.assertTrue(perceptronController.parse("/opt/nlp_data/text/发文.txt"));
     }
 }
