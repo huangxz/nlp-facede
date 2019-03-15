@@ -1,8 +1,10 @@
 ## 快速开始
 
-首先需要部署模型到本地，这里把 data.zip 解压到 /opt/nlp_data/hanlp/ 这个目录。
+首先需要部署模型到本地，这里把 [data.zip](https://pan.baidu.com/s/11M26oGfT3T7knsXDWktL_w) 解压到 /opt/nlp_data/hanlp/ 这个目录。
+
 否则你需要修改 application.yml 和 hanlp.properties 中相应的目录。
-之后，你可以用 mvn spring-boot:run 启动，也可以用下边的 jar 方式启动。
+
+之后，你可以直接在项目根目录用 mvn spring-boot:run 启动，也可以用下边的 jar 方式启动。
 
 打包
 ```
@@ -42,7 +44,7 @@ PerceptronNERModelPath=data/model/perceptron/pku2681/ner.bin
 基于感知机制作人民日报2014语料格式语料库
 ```
 curl -X POST http://localhost:9090/corpus/perceptron?path=/opt/nlp_data/text
-``` 
+```
 
 基于感知机制作 word2vec 语料库
 ```
