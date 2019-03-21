@@ -1,19 +1,19 @@
 ## 快速开始
 
-首先需要部署模型到本地，这里把 [data.zip](https://pan.baidu.com/s/11M26oGfT3T7knsXDWktL_w) 解压到 /opt/nlp/hanlp/ 这个目录。
+首先需要部署模型到本地，这里把 [nlp.zip](https://pan.baidu.com/s/11M26oGfT3T7knsXDWktL_w) 解压到 /opt 这个目录。
 
 否则你需要修改 application.yml 和 hanlp.properties 中相应的目录。
 
 之后，你可以直接在项目根目录用 mvn spring-boot:run 启动，也可以用下边的 jar 方式启动。
 
 打包
-```
-mvn clean package -Dmaven.test.skip=true
+```shell
+# mvn clean package -Dmaven.test.skip=true
 ```
 
-启动，根据实际情况修改 hanlp 感知机模型的路径
-```
-java -XX:MetaspaceSize=1024m -XX:MaxMetaspaceSize=1024m -Xms8192m -Xmx8192m -Xmn1024m -Xss8m \
+启动，根据实际情况修改 hanlp 感知机模型的路径。这里的 JVM 调优参数可以酌情删除，是训练大模型时需要配置的。
+```shell
+# java -XX:MetaspaceSize=1024m -XX:MaxMetaspaceSize=1024m -Xms8192m -Xmx8192m -Xmn1024m -Xss8m \
      -jar nlp-facede-0.0.1-SNAPSHOT.jar \
      --app.nlp.corpus.v1=/opt/nlp/corpus/v1 \
      --app.nlp.corpus.v2=/opt/nlp/corpus/v2.txt \
@@ -24,8 +24,8 @@ java -XX:MetaspaceSize=1024m -XX:MaxMetaspaceSize=1024m -Xms8192m -Xmx8192m -Xmn
 ```
 
 提取关键字
-```
-curl -X POST \
+```shell
+# curl -X POST \
   'http://localhost:9090/api/keyword?title=转发信息产业部国家发展和改革委员会关于调整部分电信业务资费管理方式的通知&size=5' \
   -H 'Cache-Control: no-cache'
 ```
@@ -43,13 +43,13 @@ PerceptronNERModelPath=data/model/perceptron/pku2681/ner.bin
 ```
 
 基于感知机制作人民日报2014语料格式语料库
-```
-curl -X POST http://localhost:9090/corpus/perceptron?path=/opt/nlp/text
+```shell
+# curl -X POST http://localhost:9090/corpus/perceptron?path=/opt/nlp/text
 ```
 
 基于感知机制作 word2vec 语料库
-```
-curl -X POST http://localhost:9090/corpus/word2vec?path=/opt/nlp/text
+```shell
+# curl -X POST http://localhost:9090/corpus/w2c/d?path=/opt/nlp/text
 ```
 
 ## 根据自己的语料库训练行业模型
@@ -57,8 +57,8 @@ curl -X POST http://localhost:9090/corpus/word2vec?path=/opt/nlp/text
 在训练模型之前，要先确保模型生成的目录 pku2681、word2vec 已经存在。
 
 停止之前的 App，重新使用下边的命令 run
-```
-java -jar nlp-facede-0.0.1-SNAPSHOT.jar \
+```shell
+# java -jar nlp-facede-0.0.1-SNAPSHOT.jar \
      --app.nlp.corpus.v1=/opt/nlp/corpus/v1 \
      --app.nlp.corpus.v2=/opt/nlp/corpus/v2.txt \
      --app.nlp.model.cws=/opt/nlp/hanlp/data/model/perceptron/pku2681/cws.bin \
@@ -70,25 +70,26 @@ java -jar nlp-facede-0.0.1-SNAPSHOT.jar \
 ### 基于 v1 语料库
 
 训练 cws 分词模型
-```
-curl -X POST http://localhost:9090/model/cws
+```shell
+# curl -X POST http://localhost:9090/model/cws
 ```
 
 训练 pos 词性标注模型
-```
-curl -X POST http://localhost:9090/model/pos
+```shell
+# curl -X POST http://localhost:9090/model/pos
 ```
 
 训练 ner 实体识别模型
-```
-curl -X POST http://localhost:9090/model/ner
+```shell
+# curl -X POST http://localhost:9090/model/ner
 ```
 
 ### 基于 v2 语料库
 
 训练 word2vec 向量模型
-```
-curl -X POST http://localhost:9090/model/w2v
+```shell
+# curl -X POST http://localhost:9090/model/w2v
 ```
 
  
+
