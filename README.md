@@ -1,6 +1,6 @@
 ## 快速开始
 
-首先需要部署模型到本地，这里把 [nlp.zip](https://pan.baidu.com/s/11M26oGfT3T7knsXDWktL_w) 解压到 /opt 这个目录。
+首先需要部署模型到本地，这里把 [nlp.zip](https://pan.baidu.com/s/1BLrmW1ZbhVO6-d_277A-8A) 解压到 /opt 这个目录。
 
 否则你需要修改 application.yml 和 hanlp.properties 中相应的目录。
 
