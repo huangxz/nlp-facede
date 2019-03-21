@@ -7,7 +7,7 @@ app:
       v1: ${NLP_CORPUS_V1:/opt/nlp/corpus/v1}
       v2: ${NLP_CORPUS_V2:/opt/nlp/corpus/v2.txt}
     model:
-      cws: ${NLP_MODEL_CWS:/opt/nlp/hanlp/data/model/perceptron/pku2681/cws.bin}
-      pos: ${NLP_MODEL_POS:/opt/nlp/hanlp/data/model/perceptron/pku2681/pos.bin}
-      ner: ${NLP_MODEL_NER:/opt/nlp/hanlp/data/model/perceptron/pku2681/ner.bin}
+      cws: ${NLP_MODEL_CWS:/opt/nlp/hanlp/data/model/perceptron/wenjian/cws.bin}
+      pos: ${NLP_MODEL_POS:/opt/nlp/hanlp/data/model/perceptron/wenjian/pos.bin}
+      ner: ${NLP_MODEL_NER:/opt/nlp/hanlp/data/model/perceptron/wenjian/ner.bin}
       vec: ${NLP_MODEL_VEC:/opt/nlp/hanlp/data/model/word2vec/wenjian.msr.txt}

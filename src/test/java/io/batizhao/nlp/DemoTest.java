@@ -88,7 +88,7 @@ public class DemoTest extends NlpApplicationTests {
 //        documents1.add(new Document(5, "中国电信集团公司关于增配移动转售专用码号资源的请示"));
 //        documents1.add(new Document(6, "中国电信集团公司关于王晓初董事长申办赴港签注的请示"));
 
-        try(Stream<String> lines = Files.lines(Paths.get("/opt/nlp_data/text/发文.txt"), UTF_8)) {
+        try(Stream<String> lines = Files.lines(Paths.get("/opt/nlp/data/documents/发文标题.txt"), UTF_8)) {
             List<Document> documents1 = new ArrayList<>();
 
             lines.forEachOrdered(new Consumer<String>() {
@@ -115,7 +115,7 @@ public class DemoTest extends NlpApplicationTests {
     public void testExtractMeetingNotice() throws IOException {
 //        HanLP.Config.enableDebug();
 //        CustomDictionary.reload();
-        Map m = apiController.extractMeetingNotice("/opt/nlp_data/text/会议通知〔2011〕305号.txt");
+        Map m = apiController.extractMeetingNotice("/opt/nlp/data/text/会议通知〔2011〕305号.txt");
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(m));
     }
